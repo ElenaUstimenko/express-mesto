@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "homepage": "https://github.com/ElenaUstimenko/express-mesto-gha.git",
+  "homepage": "https://github.com/ElenaUstimenko/express-mesto.git",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
