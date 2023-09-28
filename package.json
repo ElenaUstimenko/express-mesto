@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "homepage": "https://github.com/ElenaUstimenko/express-mesto.git",
+  "homepage": "https://elenaustimenko.github.io/express-mesto/",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
   },
   "keywords": [],
   "author": "ElenaUstimenko",
@@ -24,6 +26,7 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
+    "gh-pages": "^6.0.0",
     "mongoose": "^7.5.2"
   }
 }
