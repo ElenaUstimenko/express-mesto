@@ -7,9 +7,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint .",
-    "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "lint": "npx eslint ."
   },
   "keywords": [],
   "author": "ElenaUstimenko",

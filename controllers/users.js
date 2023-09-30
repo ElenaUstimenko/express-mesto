@@ -15,6 +15,7 @@ const getUserId = async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId);
+
     if (!user) {
       return res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
     }
@@ -44,22 +45,23 @@ const postUsers = async (req, res) => {
 // PATCH /users/me — обновляет профиль
 const updateUser = async (req, res) => {
   try {
-    const { name, about} = req.body;
-    // console.log({ name, about})
-    // console.log(req.user._id)
+    const { name, about } = req.body;
+    // console.log({ name, about });
+    // console.log(req.user._id);
     const user = await User.findByIdAndUpdate(
-      { _id: req.user._id},
+      { _id: req.user._id },
       { name, about },
       { new: true },
     );
+
     if (!user) {
       return res.status(404).send({ message: 'Пользователь с указанным _id не найден' });
     }
+    return res.send(user);
+  } catch (error) {
     if (error.message === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
     }
-    return res.send(user);
-  } catch (error) {
     if (error.message === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
     }
@@ -71,21 +73,22 @@ const updateUser = async (req, res) => {
 const updateUserAvatar = async (req, res) => {
   try {
     const { avatar } = req.body;
-    // console.log(avatar)
-    // console.log(req.user._id)
+    // console.log(avatar);
+    // console.log(req.user._id);
     const user = await User.findByIdAndUpdate(
-      { _id: req.user._id},
+      { _id: req.user._id },
       { avatar },
       { new: true },
     );
+
     if (!user) {
       return res.status(404).send({ message: 'Пользователь с указанным _id не найден' });
     }
+    return res.send(user);
+  } catch (error) {
     if (error.message === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
     }
-    return res.send(user);
-  } catch (error) {
     if (error.message === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
     }
