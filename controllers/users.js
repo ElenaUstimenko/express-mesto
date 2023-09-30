@@ -17,17 +17,17 @@ const getUserId = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+      return res.status(400).send({ message: 'Пользователь по указанному _id не найден' });
     }
     return res.send(user);
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === 'ValidationError' || error.name === 'CastError') {
       return res.status(400).send({ message: 'Переданы некорректные данные', error });
     }
-    if (error.name === 'CastError') {
-      return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
-    }
     return res.send(User);
+    // } else {
+    // res.status(500).send({ message: 'Ошибка на стороне сервера', error });
+    // }
   }
 };
 
