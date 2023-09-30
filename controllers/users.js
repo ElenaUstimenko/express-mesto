@@ -54,7 +54,10 @@ const updateUser = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       { _id: req.user._id },
       { name, about },
-      { new: true },
+      {
+        new: true,
+        runValidators: true,
+      },
     );
 
     if (!user) {
