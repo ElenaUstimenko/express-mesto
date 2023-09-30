@@ -1,10 +1,10 @@
 const express = require('express');
 const json = require('express');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
-const path = require('path');
 const bodyParser = require('body-parser');
 const router = require('./routes/index');
-
+const limiter = require('./middlewares/rateLimiter');
 // env хранит все переменные окружения
 const {
   PORT = 3000,
@@ -14,11 +14,13 @@ const {
 // создаём приложение
 const app = express();
 
+app.use(helmet());
+app.use(limiter);
+
 // подключаемся к серверу MongoDB
 mongoose.connect(MONGO_URL);
 
 // после инициализации приложения, но до задействования роутов
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(json());
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса

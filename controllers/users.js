@@ -4,9 +4,15 @@ const User = require('../models/user');
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
+    if (!users) {
+      return res.status(404).send({ message: 'Пользователи не найдены' });
+    }
     return res.send(users);// передать данные пользователей
   } catch (error) {
-    return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
+    if (error.name === 'ValidationError' || error.name === 'CastError') {
+      return res.status(400).send({ message: 'Переданы некорректные данные' });
+    }
+    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
   }
 };
 
@@ -21,13 +27,10 @@ const getUserId = async (req, res) => {
     }
     return res.send(user);
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      return res.status(404).send({ message: 'Переданы некорректные данные', error });
-    }
     if (error.name === 'CastError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные', error });
+      return res.status(400).send({ message: 'Переданы некорректные данные' });
     }
-    return res.send(User);
+    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
   }
 };
 
@@ -38,11 +41,10 @@ const postUsers = async (req, res) => {
     return res.status(201).send(await newUser.save());
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя', ...error });
+      return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
     }
+    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
   }
-  User.push(req.body);
-  return res.send(req.body);
 };
 
 // PATCH /users/me — обновляет профиль
@@ -66,15 +68,12 @@ const updateUser = async (req, res) => {
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
-    }
-    if (error.name === 'NotFound') {
-      return res.status(404).send({ message: 'Страница не найдена' });
+      return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля' });
     }
     if (error.name === 'CastError') {
-      return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
+      return res.status(400).send({ message: 'Передан некорректный _id' });
     }
-    return res.send(res.user);
+    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
   }
 };
 
@@ -87,7 +86,10 @@ const updateUserAvatar = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       { _id: req.user._id },
       { avatar },
-      { new: true },
+      {
+        new: true,
+        runValidators: true,
+      },
     );
 
     if (!user) {
@@ -96,15 +98,12 @@ const updateUserAvatar = async (req, res) => {
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
-    }
-    if (error.name === 'NotFound') {
-      return res.status(404).send({ message: 'Страница не найдена' });
+      return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля' });
     }
     if (error.name === 'CastError') {
-      return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
+      return res.status(400).send({ message: 'Передан некорректный _id' });
     }
-    return res.send(res.user);
+    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
   }
 };
 
