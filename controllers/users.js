@@ -66,7 +66,6 @@ const updateUser = async (req, res) => {
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      // на этой ошибке тест не прошёл
       return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
     }
     if (error.name === 'NotFound') {
