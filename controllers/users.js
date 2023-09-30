@@ -21,8 +21,11 @@ const getUserId = async (req, res) => {
     }
     return res.send(user);
   } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные', error });
+    }
+    if (error.name === 'CastError') {
+      return res.status(404).send({ message: 'Переданы некорректные данные', error });
     }
     return res.send(User);
     // } else {
