@@ -48,7 +48,7 @@ const deleteCard = async (req, res) => {
     }
     return res.send(card);
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === 'ValidationError' || error.name === 'CastError') {
       return res.status(400).send({ message: 'Переданы некорректные данные', error });
     }
     return res.status(500).send({ message: 'Ошибка на стороне сервера' });
@@ -92,12 +92,12 @@ const dislikeCard = async (req, res) => {
     }
     return res.send(card);
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === 'ValidationError' || error.name === 'CastError') {
       return res.status(400).send({ message: 'Переданы некорректные данные', error });
     }
-    if (error.name === 'CastError') {
-      return res.status(404).send({ message: 'Переданы некорректные данные для снятия лайка' });
-    }
+    // if (error.name === 'CastError') {
+    // return res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка' });
+    // }
   }
   return res.status(500).send({ message: 'Ошибка на стороне сервера' });
 };

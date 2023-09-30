@@ -28,9 +28,6 @@ const getUserId = async (req, res) => {
       return res.status(400).send({ message: 'Переданы некорректные данные', error });
     }
     return res.send(User);
-    // } else {
-    // res.status(500).send({ message: 'Ошибка на стороне сервера', error });
-    // }
   }
 };
 
