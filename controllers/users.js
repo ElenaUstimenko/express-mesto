@@ -21,7 +21,7 @@ const getUserId = async (req, res) => {
     }
     return res.send(user);
   } catch (error) {
-    if (error.message === 'CastError') {
+    if (error.name === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
     }
     return res.send(User);
@@ -34,7 +34,7 @@ const postUsers = async (req, res) => {
     const newUser = await new User(req.body);
     return res.status(201).send(await newUser.save());
   } catch (error) {
-    if (error.message === 'ValidationError') {
+    if (error.name === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя', ...error });
     }
   }
@@ -59,10 +59,10 @@ const updateUser = async (req, res) => {
     }
     return res.send(user);
   } catch (error) {
-    if (error.message === 'ValidationError') {
+    if (error.name === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
     }
-    if (error.message === 'CastError') {
+    if (error.name === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
     }
     return res.send(res.user);
@@ -86,10 +86,10 @@ const updateUserAvatar = async (req, res) => {
     }
     return res.send(user);
   } catch (error) {
-    if (error.message === 'ValidationError') {
+    if (error.name === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
     }
-    if (error.message === 'CastError') {
+    if (error.name === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
     }
     return res.send(res.user);
