@@ -24,6 +24,9 @@ const getUserId = async (req, res) => {
     if (error.name === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
     }
+    if (error.name === 'ValidationError') {
+      return res.status(400).send({ message: 'Переданы некорректные данные', error });
+    }
     return res.send(User);
   }
 };
@@ -60,7 +63,11 @@ const updateUser = async (req, res) => {
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError') {
+      // на этой ошибке тест не прошёл
       return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
+    }
+    if (error.name === 'NotFound') {
+      return res.status(404).send({ message: 'Страница не найдена', error });
     }
     if (error.name === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
@@ -88,6 +95,9 @@ const updateUserAvatar = async (req, res) => {
   } catch (error) {
     if (error.name === 'ValidationError') {
       return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля', ...error });
+    }
+    if (error.name === 'NotFound') {
+      return res.status(404).send({ message: 'Страница не найдена', error });
     }
     if (error.name === 'CastError') {
       return res.status(500).send({ message: 'Ошибка на стороне сервера', error });
