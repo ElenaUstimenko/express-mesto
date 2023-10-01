@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const router = require('./routes/index');
 const limiter = require('./middlewares/rateLimiter');
+
 // env хранит все переменные окружения
 const {
   PORT = 3000,

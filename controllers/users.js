@@ -1,18 +1,21 @@
 const User = require('../models/user');
+const { INCORRECT } = require('../utils/constants');
+const { NOT_FOUND } = require('../utils/constants');
+const { SERVER_ERROR } = require('../utils/constants');
 
 // GET /users — возвращает всех пользователей
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
     if (!users) {
-      return res.status(404).send({ message: 'Пользователи не найдены' });
+      return res.status(NOT_FOUND).send({ message: 'Пользователи не найдены' });
     }
     return res.send(users);// передать данные пользователей
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные' });
+      return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
     }
-    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
+    return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -23,14 +26,14 @@ const getUserId = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+      return res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден' });
     }
     return res.send(user);
   } catch (error) {
     if (error.name === 'CastError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные' });
+      return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
     }
-    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
+    return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -41,9 +44,9 @@ const postUsers = async (req, res) => {
     return res.status(201).send(await newUser.save());
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      return res.status(INCORRECT).send({ message: 'Переданы некорректные данные при создании пользователя' });
     }
-    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
+    return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -63,17 +66,17 @@ const updateUser = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).send({ message: 'Пользователь с указанным _id не найден' });
+      return res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
     }
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля' });
+      return res.status(INCORRECT).send({ message: 'Переданы некорректные данные при при обновлении профиля' });
     }
     if (error.name === 'CastError') {
-      return res.status(400).send({ message: 'Передан некорректный _id' });
+      return res.status(INCORRECT).send({ message: 'Передан некорректный _id' });
     }
-    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
+    return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -93,17 +96,17 @@ const updateUserAvatar = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).send({ message: 'Пользователь с указанным _id не найден' });
+      return res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
     }
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Переданы некорректные данные при при обновлении профиля' });
+      return res.status(INCORRECT).send({ message: 'Переданы некорректные данные при при обновлении профиля' });
     }
     if (error.name === 'CastError') {
-      return res.status(400).send({ message: 'Передан некорректный _id' });
+      return res.status(INCORRECT).send({ message: 'Передан некорректный _id' });
     }
-    return res.status(500).send({ message: 'Ошибка на стороне сервера' });
+    return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
