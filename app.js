@@ -26,13 +26,6 @@ app.use(json());
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
-// временное решение авторизации
-app.use((req, res, next) => {
-  req.user = {
-    _id: '651431b4f4b058a8bbbea2d6',
-  };
-  next();
-});
 module.exports.createCard = (req, res) => {
   console.log(req.user._id); // _id станет доступен
   console.log(res);
