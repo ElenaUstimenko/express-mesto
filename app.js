@@ -36,8 +36,8 @@ app.use(router);
 
 app.use(errors()); // обработчик ошибок celebrate
 
-app.use((error, req, res, next) => {
-  const { statusCode = 500, message } = error;
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
   res
     .status(statusCode)
     .send({
