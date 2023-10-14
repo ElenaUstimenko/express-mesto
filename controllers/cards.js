@@ -1,8 +1,8 @@
 const Card = require('../models/card');
 
 const {
-  IncorrectError,
   NotFoundError,
+  ValidationError,
   // ForbiddenError,
 } = require('../errors/errors');
 
@@ -18,7 +18,7 @@ const getCards = async (req, res, next) => {
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
       // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
-      return next(new IncorrectError('Переданы некорректные данные'));
+      return next(new ValidationError('Переданы некорректные данные'));
     }
     // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     // return next(new ServerError('На сервере произошла ошибка'));
@@ -37,7 +37,7 @@ const createCard = async (req, res, next) => {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
       // return res.status(INCORRECT).send({ message: 'Переданы
       // некорректные данные при создании карточки' });
-      return next(IncorrectError('Переданы некорректные данные при создании карточки'));
+      return next(ValidationError('Переданы некорректные данные'));
     }
     // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     // return next(ServerError('На сервере произошла ошибка'));
@@ -71,7 +71,7 @@ const deleteCard = async (req, res, next) => {
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
       // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
-      return next(new IncorrectError('Переданы некорректные данные'));
+      return next(new ValidationError('Переданы некорректные данные'));
     }
     // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     // return next(new ServerError('На сервере произошла ошибка'));
@@ -120,8 +120,8 @@ function likeCard(req, res, next) {
       throw new NotFoundError('Передан несуществующий _id карточки');
     })
     .catch((error) => {
-      if (error.name === 'CastError' || error.name === 'BadRequest') {
-        return next(new IncorrectError('Переданы некорректные данные для постановки лайка'));
+      if (error.name === 'ValidationError' || error.name === 'CastError') {
+        return next(new ValidationError('Переданы некорректные данные'));
       }
       return next(error);
     });
@@ -145,7 +145,7 @@ const dislikeCard = async (req, res, next) => {
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
       // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
-      return next(new IncorrectError('Переданы некорректные данные'));
+      return next(new ValidationError('Переданы некорректные данные'));
     }
     // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     // return next(new ServerError('На сервере произошла ошибка'));
