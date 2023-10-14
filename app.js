@@ -10,7 +10,11 @@ const router = require('./routes/index');
 const limiter = require('./middlewares/rateLimiter');
 
 // env хранит все переменные окружения
-const { PORT, MONGO_URL } = process.env;
+// const { PORT, MONGO_URL } = process.env;
+const {
+  PORT = 3000,
+  MONGO_URL = 'mongodb://127.0.0.1:27017/mestodb',
+} = process.env;
 
 // создаём приложение
 const app = express();
