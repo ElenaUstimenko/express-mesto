@@ -1,4 +1,5 @@
 const userRoutes = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
 const {
   login,
   getUsers,
@@ -10,14 +11,44 @@ const {
 } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 
-userRoutes.post('/signin', login);
-userRoutes.post('/signup', createUsers);
+userRoutes.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6),
+  }),
+}), login);
 
-// userRoutes.use(auth); - version 2
+userRoutes.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi
+      .string(),
+  }),
+}), createUsers);
+
 userRoutes.get('/', auth, getUsers);
 userRoutes.get('/me', auth, getUserMe);
-userRoutes.get('/:userId', auth, getUserId);
-userRoutes.patch('/me', auth, updateUser);
-userRoutes.patch('/me/avatar', auth, updateUserAvatar);
+
+userRoutes.get('/:userId', auth, celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex().required(),
+  }),
+}), getUserId);
+
+userRoutes.patch('/me', auth, celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+  }),
+}), updateUser);
+
+userRoutes.patch('/me/avatar', auth, celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string(),
+  }),
+}), updateUserAvatar);
 
 module.exports = userRoutes;
