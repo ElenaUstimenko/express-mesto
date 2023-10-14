@@ -31,6 +31,26 @@ const login = (req, res, next) => {
     .catch(next);
 };
 
+const SOLT_ROUNDS = 10;
+
+// POST /users — создаёт пользователя - signup
+// код 11000 не работает, пользователи создаются
+// код 404 не работает, вместо него 500
+const createUsers = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const hash = await bcrypt.hash(password, SOLT_ROUNDS);
+
+    const newUser = await new User({ email, password: hash });
+    return res.status(201).send(await newUser.save());
+  } catch (error) {
+    if (error.code === 11000) {
+      return next(new ReRegistrationError('Данный email уже зарегистрирован'));
+    }
+    return next(error);
+  }
+};
+
 // GET /users — возвращает всех пользователей
 const getUsers = async (req, res, next) => {
   try {
@@ -63,7 +83,7 @@ const getUserMe = async (req, res, next) => {
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-      // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
+    // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
       return next(new ValidationError('Переданы некорректные данные'));
     }
     // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
@@ -87,32 +107,6 @@ const getUserId = async (req, res, next) => {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
       // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
       return next(new ValidationError('Переданы некорректные данные'));
-    }
-    // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    // return next(new ServerError('На сервере произошла ошибка'));
-    return next(error);
-  }
-};
-
-const SOLT_ROUNDS = 10;
-
-// POST /users — создаёт пользователя - signup
-const createUsers = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const hash = await bcrypt.hash(password, SOLT_ROUNDS);
-
-    const newUser = await new User({ email, password: hash });
-    return res.status(201).send(await newUser.save());
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
-      // return res.status(INCORRECT).send({ message: 'Переданы
-      // некорректные данные при создании пользователя' });
-      return next(new ValidationError('Переданы некорректные данные при создании пользователя'));
-    }
-    if (error.code === 11000) {
-      // return res.status(409).send({ message: 'Данный email уже зарегистрирован' });
-      return next(new ReRegistrationError('Данный email уже зарегистрирован'));
     }
     // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     // return next(new ServerError('На сервере произошла ошибка'));
