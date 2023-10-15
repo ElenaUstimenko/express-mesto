@@ -10,6 +10,7 @@ const {
 const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
+
     if (!cards) {
       throw new NotFoundError('Карточки не найдены');
     }

@@ -1,5 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const userRoutes = require('express').Router();
+const auth = require('../middlewares/auth');
 const {
   login,
   getUsers,
@@ -9,7 +10,6 @@ const {
   updateUser,
   updateUserAvatar,
 } = require('../controllers/users');
-const auth = require('../middlewares/auth');
 
 userRoutes.post('/signin', celebrate({
   body: Joi.object().keys({

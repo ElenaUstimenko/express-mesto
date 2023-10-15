@@ -1,5 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const cardRoutes = require('express').Router();
+const auth = require('../middlewares/auth');
 const {
   getCards,
   createCard,
@@ -7,15 +8,13 @@ const {
   likeCard,
   dislikeCard,
 } = require('../controllers/cards');
-const auth = require('../middlewares/auth');
 
 cardRoutes.get('/', auth, getCards);
 
 cardRoutes.post('/', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string()
-      .required(),
+    link: Joi.string().required(),
   }),
 }), createCard);
 
