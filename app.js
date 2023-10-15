@@ -7,11 +7,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const limiter = require('./middlewares/rateLimiter');
-const userRoutes = require('./routes/users');
-const cardRoutes = require('./routes/cards');
 const { NotFoundError } = require('./errors/NotFoundError');
 const { ServerError } = require('./middlewares/ServerError');
-// const router = require('./routes/index');
+const router = require('./routes/index');
 
 // env хранит все переменные окружения
 // const { PORT, MONGO_URL } = process.env;
@@ -36,10 +34,7 @@ app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
 // подключение
-// app.use(router);
-app.use('/users', userRoutes);
-app.use('/cards', cardRoutes);
-
+app.use(router);
 app.use((req, res, next) => next(new NotFoundError('Неверный адрес запроса')));
 app.use(errors()); // обработчик ошибок celebrate
 app.use(ServerError);

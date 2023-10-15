@@ -1,9 +1,9 @@
 const Card = require('../models/card');
 
 const {
+  ForbiddenError,
   NotFoundError,
   ValidationError,
-  ForbiddenError,
 } = require('../errors/errors');
 
 // GET /cards — возвращает все карточки
@@ -43,7 +43,7 @@ const createCard = async (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   try {
     const { cardId } = req.params;
-    const card = await Card.findById(cardId);
+    const card = await Card.findById(cardId).populate('owner');
 
     if (!card) {
       throw new NotFoundError('Карточка с указанным _id не найдена');
@@ -54,7 +54,7 @@ const deleteCard = async (req, res, next) => {
     console.log('userId', userId);
     console.log(ownerId.valueOf() === userId);
 
-    if (ownerId.valueOf() !== userId) {
+    if (ownerId !== userId) {
       throw next(ForbiddenError('Невозможно удалить карточку, созданную другим пользователем'));
     }
     // if (ownerId.valueOf() === userId) {

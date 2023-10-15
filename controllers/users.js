@@ -5,8 +5,8 @@ const User = require('../models/user');
 const { JWT_SECRET, NODE_ENV } = process.env;
 
 const {
-  NotFoundError,
   ReRegistrationError,
+  NotFoundError,
   ValidationError,
 } = require('../errors/errors');
 
