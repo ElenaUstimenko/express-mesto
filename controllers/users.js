@@ -26,7 +26,6 @@ const login = (req, res, next) => {
         sameSite: true,
       });
       res.send({ jwt: token });
-      // console.log('login', token);
     })
     .catch(next);
 };
@@ -34,8 +33,6 @@ const login = (req, res, next) => {
 const SOLT_ROUNDS = 10;
 
 // POST /users — создаёт пользователя - signup
-// код 11000 не работает, пользователи создаются
-// код 404 не работает, вместо него 500
 const createUsers = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -56,17 +53,13 @@ const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     if (!users) {
-      // return res.status(NOT_FOUND).send({ message: 'Пользователи не найдены' });
       throw new NotFoundError('Пользователи не найдены');
     }
     return res.send(users);// передать данные пользователей
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-      // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    // return next(new ServerError('На сервере произошла ошибка'));
     return next(error);
   }
 };
@@ -77,17 +70,13 @@ const getUserMe = async (req, res, next) => {
     const user = await User.findById({ _id: req.user._id });
 
     if (!user) {
-      // return res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден' });
       throw new NotFoundError('Пользователь по указанному _id не найден');
     }
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-    // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    // return next(new ServerError('На сервере произошла ошибка'));
     return next(error);
   }
 };
@@ -99,17 +88,13 @@ const getUserId = async (req, res, next) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      // return res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден' });
       throw new NotFoundError('Пользователь по указанному _id не найден');
     }
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-      // return res.status(INCORRECT).send({ message: 'Переданы некорректные данные' });
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    // return next(new ServerError('На сервере произошла ошибка'));
     return next(error);
   }
 };
@@ -118,8 +103,6 @@ const getUserId = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const { name, about } = req.body;
-    // console.log({ name, about });
-    // console.log(req.user._id);
     const user = await User.findByIdAndUpdate(
       { _id: req.user._id },
       { name, about },
@@ -130,18 +113,13 @@ const updateUser = async (req, res, next) => {
     );
 
     if (!user) {
-      // return res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
       throw new NotFoundError('Пользователь с указанным _id не найден');
     }
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-      // return res.status(INCORRECT).send({ message: 'Переданы
-      // некорректные данные при при обновлении профиля' });
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    // return next(new ServerError('На сервере произошла ошибка'));
     return next(error);
   }
 };
@@ -150,8 +128,6 @@ const updateUser = async (req, res, next) => {
 const updateUserAvatar = async (req, res, next) => {
   try {
     const { avatar } = req.body;
-    // console.log(avatar);
-    // console.log(req.user._id);
     const user = await User.findByIdAndUpdate(
       { _id: req.user._id },
       { avatar },
@@ -162,18 +138,13 @@ const updateUserAvatar = async (req, res, next) => {
     );
 
     if (!user) {
-      // return res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
       throw new NotFoundError('Пользователь с указанным _id не найден');
     }
     return res.send(user);
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-      // return res.status(INCORRECT).send({ message: 'Переданы
-      // некорректные данные при при обновлении профиля' });
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    // return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    // return next(new ServerError('На сервере произошла ошибка'));
     return next(error);
   }
 };

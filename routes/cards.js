@@ -9,10 +9,9 @@ const {
 } = require('../controllers/cards');
 const auth = require('../middlewares/auth');
 
-cardRoutes.use(auth);
-cardRoutes.get('/', getCards);
+cardRoutes.get('/', auth, getCards);
 
-cardRoutes.post('/', celebrate({
+cardRoutes.post('/', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string()
@@ -20,19 +19,19 @@ cardRoutes.post('/', celebrate({
   }),
 }), createCard);
 
-cardRoutes.delete('/:cardId', celebrate({
+cardRoutes.delete('/:cardId', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
 }), deleteCard);
 
-cardRoutes.put('/:cardId/likes', celebrate({
+cardRoutes.put('/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
 }), likeCard);
 
-cardRoutes.delete('/:cardId/likes', celebrate({
+cardRoutes.delete('/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
