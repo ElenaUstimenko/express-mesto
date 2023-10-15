@@ -35,6 +35,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // для приёма ве�
 // подключение
 app.use(router);
 app.use((req, res, next) => next(new NotFoundError('Неверный адрес запроса')));
+/* app.all('*', (req, res) => {
+  res.status(NotFoundError).send({ message: 'Неверный адрес запроса' });
+}); */
 app.use(errors()); // обработчик ошибок celebrate
 app.use(ServerError);
 

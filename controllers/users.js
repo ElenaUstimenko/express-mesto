@@ -35,10 +35,22 @@ const SOLT_ROUNDS = 10;
 // POST /users — создаёт пользователя - signup
 const createUsers = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const {
+      email,
+      password,
+      name,
+      about,
+      avatar,
+    } = req.body;
     const hash = await bcrypt.hash(password, SOLT_ROUNDS);
 
-    const newUser = await new User({ email, password: hash });
+    const newUser = await new User({
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
+    });
     return res.status(201).send(await newUser.save());
   } catch (error) {
     if (error.code === 11000) {
