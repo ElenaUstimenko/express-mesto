@@ -1,11 +1,11 @@
 const express = require('express');
 const json = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
+require('dotenv').config(); // безопасность ключа
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
+const bodyParser = require('body-parser');
+const { errors } = require('celebrate'); // отправить клиенту ошибку
 const limiter = require('./middlewares/rateLimiter');
 const { NotFoundError } = require('./errors/NotFoundError');
 const { ServerError } = require('./middlewares/ServerError');
@@ -21,16 +21,15 @@ const {
 // создаём приложение
 const app = express();
 
-app.use(cookieParser());
-app.use(helmet());
-app.use(limiter);
+app.use(cookieParser()); // для чтения кук
+app.use(helmet()); // для защиты приложения путем настройки заголовков HTTP
+app.use(limiter); // ограничивает количество запросов с одного IP-адреса в единицу времени
 
-// подключаемся к серверу MongoDB
-mongoose.connect(MONGO_URL);
+mongoose.connect(MONGO_URL); // подключаемся к серверу MongoDB
 
 // после инициализации приложения, но до задействования роутов
 app.use(json());
-app.use(bodyParser.json()); // для собирания JSON-формата
+app.use(bodyParser.json()); // для собирания JSON-формата, объединения пакетов
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
 // подключение
