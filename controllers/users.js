@@ -54,6 +54,9 @@ const createUsers = async (req, res, next) => {
     if (err.code === 11000) {
       return next(new ReRegistrationError('Данный email уже зарегистрирован'));
     }
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
+      return next(new ValidationError('Переданы некорректные данные'));
+    }
     return next(err);
   }
 };
