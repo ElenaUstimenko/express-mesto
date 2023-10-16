@@ -4,9 +4,9 @@ const User = require('../models/user');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
-const { ReRegistrationError } = require('../errors/ReRegistrationError');
-const { NotFoundError } = require('../errors/NotFoundError');
-const { ValidationError } = require('../errors/ValidationError');
+const ReRegistrationError = require('../errors/ReRegistrationError');
+const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 
 // получает из запроса почту и пароль и проверяет их - signin
 const login = (req, res, next) => {

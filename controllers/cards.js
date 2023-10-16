@@ -1,7 +1,7 @@
 const Card = require('../models/card');
-const { ForbiddenError } = require('../errors/ForbiddenError');
-const { NotFoundError } = require('../errors/NotFoundError');
-const { ValidationError } = require('../errors/ValidationError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 
 // GET /cards — возвращает все карточки
 const getCards = async (req, res, next) => {
