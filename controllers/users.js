@@ -30,7 +30,7 @@ const login = (req, res, next) => {
 
 const SOLT_ROUNDS = 10;
 
-// POST /users — создаёт пользователя - signup
+// POST  — создаёт пользователя - signup
 const createUsers = async (req, res, next) => {
   try {
     const {

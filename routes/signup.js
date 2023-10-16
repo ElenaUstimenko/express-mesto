@@ -1,5 +1,5 @@
-const { celebrate, Joi } = require('celebrate');
 const routerSignup = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
 const { createUsers } = require('../controllers/users');
 
 routerSignup.post('/signup', celebrate({
@@ -12,4 +12,4 @@ routerSignup.post('/signup', celebrate({
   }),
 }), createUsers);
 
-module.exports = { routerSignup };
+module.exports = routerSignup;

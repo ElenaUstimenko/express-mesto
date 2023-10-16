@@ -1,5 +1,5 @@
-const { celebrate, Joi } = require('celebrate');
 const cardRoutes = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
 const { auth } = require('../middlewares/auth');
 const {
   getCards,

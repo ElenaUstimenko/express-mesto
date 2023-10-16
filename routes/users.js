@@ -1,32 +1,13 @@
-const { celebrate, Joi } = require('celebrate');
 const userRoutes = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
 const { auth } = require('../middlewares/auth');
 const {
-  // login,
   getUsers,
   getUserMe,
   getUserId,
-  // createUsers,
   updateUser,
   updateUserAvatar,
 } = require('../controllers/users');
-
-/* userRoutes.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(6),
-  }),
-}), login);
-
-userRoutes.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(6),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
-  }),
-}), createUsers); */
 
 userRoutes.get('/', auth, getUsers);
 userRoutes.get('/me', auth, getUserMe);
