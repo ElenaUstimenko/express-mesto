@@ -2,16 +2,16 @@ const { celebrate, Joi } = require('celebrate');
 const userRoutes = require('express').Router();
 const { auth } = require('../middlewares/auth');
 const {
-  login,
+  // login,
   getUsers,
   getUserMe,
   getUserId,
-  createUsers,
+  // createUsers,
   updateUser,
   updateUserAvatar,
 } = require('../controllers/users');
 
-userRoutes.post('/signin', celebrate({
+/* userRoutes.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(6),
@@ -26,7 +26,7 @@ userRoutes.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string(),
   }),
-}), createUsers);
+}), createUsers); */
 
 userRoutes.get('/', auth, getUsers);
 userRoutes.get('/me', auth, getUserMe);
