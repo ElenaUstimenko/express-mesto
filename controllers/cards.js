@@ -1,10 +1,7 @@
 const Card = require('../models/card');
-
-const {
-  ForbiddenError,
-  NotFoundError,
-  ValidationError,
-} = require('../errors/errors');
+const { ForbiddenError } = require('../errors/ForbiddenError');
+const { NotFoundError } = require('../errors/NotFoundError');
+const { ValidationError } = require('../errors/ValidationError');
 
 // GET /cards — возвращает все карточки
 const getCards = async (req, res, next) => {
@@ -15,11 +12,11 @@ const getCards = async (req, res, next) => {
       throw new NotFoundError('Карточки не найдены');
     }
     return res.send(cards);
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 
@@ -30,17 +27,16 @@ const createCard = async (req, res, next) => {
     const ownerId = req.user._id;
     const newCard = await Card.create({ name, link, owner: ownerId });
     return res.status(201).send(await newCard.save());
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 
 // DELETE /cards/:cardId — удаляет карточку по идентификатору
-// пишет ошибку 500 и удаляет карточку, а надо, чтобы была ошибка 403 и карточка не удалялась
-const deleteCard = async (req, res, next) => {
+/* const deleteCard = async (req, res, next) => {
   try {
     const { cardId } = req.params;
     const card = await Card.findById(cardId).populate('owner');
@@ -68,28 +64,30 @@ const deleteCard = async (req, res, next) => {
     // }
     return next(error);
   }
-};
-
-/* function deleteCard(req, res, next) {
+}; */
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   const { userId } = req.user._id;
-
-  Card.findById({ _id: cardId })
+  return Card.findById(cardId)
+    .orFail()
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
+      const ownerId = card.owner.toString();
+      if (ownerId !== userId) {
+        throw next(ForbiddenError('Невозможно удалить карточку, созданную другим пользователем'));
       }
-      const ownerId = card.owner.id.valueOf();
-      if (ownerId.valueOf() !== userId) {
-        return next(ForbiddenError('Невозможно удалить карточку, созданную другим пользователем'));
-      }
-      card
-        .remove()
-        .then(() => res.send({ data: card }))
-        .catch(next);
+      return card.deleteOne();
     })
-    .catch(next);
-} */
+    .then((cardData) => res.status(200).send(cardData))
+    .catch((err) => {
+      if (err.name === 'NotFoundError') {
+        return next(new NotFoundError('Передан несуществующий _id карточки'));
+      }
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return next(new ValidationError('Переданы некорректные данные'));
+      }
+      return next(err);
+    });
+};
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
 function likeCard(req, res, next) {
@@ -106,11 +104,11 @@ function likeCard(req, res, next) {
       }
       throw new NotFoundError('Передан несуществующий _id карточки');
     })
-    .catch((error) => {
-      if (error.name === 'ValidationError' || error.name === 'CastError') {
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         return next(new ValidationError('Переданы некорректные данные'));
       }
-      return next(error);
+      return next(err);
     });
 }
 
@@ -128,11 +126,11 @@ const dislikeCard = async (req, res, next) => {
       throw new NotFoundError('Передан несуществующий _id карточки');
     }
     return res.send(card);
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 

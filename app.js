@@ -7,9 +7,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate'); // отправить клиенту ошибку
 const limiter = require('./middlewares/rateLimiter');
-const { NotFoundError } = require('./errors/NotFoundError');
-const { ServerError } = require('./middlewares/ServerError');
-const router = require('./routes/index');
+const { errorHandler } = require('./middlewares/errorHandler');
+const { router } = require('./routes/index');
 
 // env хранит все переменные окружения
 // const { PORT, MONGO_URL } = process.env;
@@ -34,23 +33,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // для приёма ве�
 
 // подключение
 app.use(router);
-app.use((req, res, next) => next(new NotFoundError('Неверный адрес запроса')));
-/* app.all('*', (req, res) => {
-  res.status(NotFoundError).send({ message: 'Неверный адрес запроса' });
-}); */
 app.use(errors()); // обработчик ошибок celebrate
-app.use(ServerError);
-
-/* app.use((error, req, res, next) => {
-  const { statusCode = 500, message } = error;
-  res.status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next();
-}); */
+app.use(errorHandler); // middleware для ошибок
 
 // запускаем сервер, слушаем порт 3000
 app.listen(PORT, () => {

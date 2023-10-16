@@ -4,11 +4,9 @@ const User = require('../models/user');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
-const {
-  ReRegistrationError,
-  NotFoundError,
-  ValidationError,
-} = require('../errors/errors');
+const { ReRegistrationError } = require('../errors/ReRegistrationError');
+const { NotFoundError } = require('../errors/NotFoundError');
+const { ValidationError } = require('../errors/ValidationError');
 
 // получает из запроса почту и пароль и проверяет их - signin
 const login = (req, res, next) => {
@@ -52,11 +50,11 @@ const createUsers = async (req, res, next) => {
       avatar,
     });
     return res.status(201).send(await newUser.save());
-  } catch (error) {
-    if (error.code === 11000) {
+  } catch (err) {
+    if (err.code === 11000) {
       return next(new ReRegistrationError('Данный email уже зарегистрирован'));
     }
-    return next(error);
+    return next(err);
   }
 };
 
@@ -69,11 +67,11 @@ const getUsers = async (req, res, next) => {
       throw new NotFoundError('Пользователи не найдены');
     }
     return res.send(users);// передать данные пользователей
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 
@@ -86,11 +84,11 @@ const getUserMe = async (req, res, next) => {
       throw new NotFoundError('Пользователь по указанному _id не найден');
     }
     return res.send(user);
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 
@@ -104,11 +102,11 @@ const getUserId = async (req, res, next) => {
       throw new NotFoundError('Пользователь по указанному _id не найден');
     }
     return res.send(user);
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 
@@ -129,11 +127,11 @@ const updateUser = async (req, res, next) => {
       throw new NotFoundError('Пользователь с указанным _id не найден');
     }
     return res.send(user);
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 
@@ -154,11 +152,11 @@ const updateUserAvatar = async (req, res, next) => {
       throw new NotFoundError('Пользователь с указанным _id не найден');
     }
     return res.send(user);
-  } catch (error) {
-    if (error.name === 'ValidationError' || error.name === 'CastError') {
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new ValidationError('Переданы некорректные данные'));
     }
-    return next(error);
+    return next(err);
   }
 };
 

@@ -1,19 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
-const { AuthorizationError } = require('../errors/errors');
+const { AuthorizationError } = require('../errors/AuthorizationError');
 
-module.exports = (req, res, next) => {
+// first version:
+/* module.exports = (req, res, next) => {
   let payload;
   try {
     const token = req.cookies.jwt;
-    // without cookies:
-    // const { token } = req.headers.authorization;
-    // if (!token || !token.startsWith('Bearer ')) {
-    //  return res.status(401).send({ message: 'Необходима авторизация' });
-    // }
-    // const validToken = token.replace('Bearer ', '');
-    // payload = jwt.verify(validToken, NODE_ENV ? JWT_SECRET : 'some-secret-key');
     if (!token) {
       // return res.status(401).send({ message: 'Необходима авторизация' });
       throw new AuthorizationError('Необходима авторизация');
@@ -34,4 +28,25 @@ module.exports = (req, res, next) => {
   }
   req.user = payload; // записываем пейлоуд в объект запроса
   return next(); // пропускаем запрос дальше
-};
+}; */
+
+// second version:
+function auth(req, res, next) {
+  const { authorization } = req.headers;
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return next(new AuthorizationError('Необходима авторизация'));
+  }
+
+  const token = authorization.replace('Bearer ', '');
+  let payload;
+
+  try {
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key');
+  } catch (err) {
+    return next(new AuthorizationError('С токеном что-то не так'));
+  }
+  req.user = payload; // записываем  payload в объект запроса
+  return next(); // пропускаем запрос дальше
+}
+
+module.exports = { auth };
