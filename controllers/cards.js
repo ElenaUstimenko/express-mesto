@@ -67,16 +67,15 @@ const createCard = async (req, res, next) => {
 }; */
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  const { _id } = req.user;
+  const { userId } = req.user._id;
   return Card.findById(cardId)
     .orFail()
     .then((card) => {
       const { ownerId } = card.owner.toString();
-      // const { userId } = req.user._id;
-      console.log('ownerId', ownerId);
-      console.log('userId', _id);
-      console.log(ownerId.valueOf() === _id);
-      if (ownerId !== _id) {
+      // console.log('ownerId', ownerId);
+      // console.log('userId', _id);
+      // console.log(ownerId.valueOf() === _id);
+      if (ownerId !== userId) {
         throw next(ForbiddenError('Невозможно удалить карточку, созданную другим пользователем'));
       }
       return card.deleteOne();
