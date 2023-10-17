@@ -1,6 +1,7 @@
 const userRoutes = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { auth } = require('../middlewares/auth');
+const { URL_REGEX } = require('../utils/constants');
 const {
   getUsers,
   getUserMe,
@@ -27,7 +28,7 @@ userRoutes.patch('/me', auth, celebrate({
 
 userRoutes.patch('/me/avatar', auth, celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string(),
+    avatar: Joi.string().pattern(URL_REGEX),
   }),
 }), updateUserAvatar);
 

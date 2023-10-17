@@ -7,6 +7,7 @@ const { JWT_SECRET, NODE_ENV } = process.env;
 const ReRegistrationError = require('../errors/ReRegistrationError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const AuthorizationError = require('../errors/AuthorizationError');
 
 // получает из запроса почту и пароль и проверяет их - signin
 const login = (req, res, next) => {
@@ -24,6 +25,7 @@ const login = (req, res, next) => {
         sameSite: true,
       });
       res.send({ jwt: token });
+      throw new AuthorizationError('Неправильные почта или пароль');
     })
     .catch(next);
 };

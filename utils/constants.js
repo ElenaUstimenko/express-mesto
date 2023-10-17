@@ -1,9 +1,3 @@
-/* const INCORRECT = 400;
-const NOT_FOUND = 404;
-const SERVER_ERROR = 500;
+const URL_REGEX = /https?:\/\/(w{3}\.)?[\w\-.~:/?#[\]@!$&'\\()*+,;=]+#?/;
 
-module.exports = {
-  INCORRECT,
-  NOT_FOUND,
-  SERVER_ERROR,
-}; */
+module.exports = { URL_REGEX };

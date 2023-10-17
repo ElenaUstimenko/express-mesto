@@ -1,6 +1,7 @@
 const cardRoutes = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { auth } = require('../middlewares/auth');
+const { URL_REGEX } = require('../utils/constants');
 const {
   getCards,
   createCard,
@@ -14,7 +15,7 @@ cardRoutes.get('/', auth, getCards);
 cardRoutes.post('/', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required(),
+    link: Joi.string().pattern(URL_REGEX).required(),
   }),
 }), createCard);
 
