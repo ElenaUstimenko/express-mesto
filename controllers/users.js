@@ -25,7 +25,14 @@ const login = (req, res, next) => {
         sameSite: true,
       });
       res.send({ jwt: token });
-      throw new AuthorizationError('Неправильные почта или пароль');
+      if (!token) {
+        throw new AuthorizationError('Неправильные почта или пароль');
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'AuthorizationError') {
+        next(new AuthorizationError('Неправильные почта или пароль'));
+      }
     })
     .catch(next);
 };
@@ -73,8 +80,11 @@ const getUsers = async (req, res, next) => {
     }
     return res.send(users);// передать данные пользователей
   } catch (err) {
+    if (err.name === 'AuthorizationError') {
+      next(new AuthorizationError('Необходима авторизация'));
+    }
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return next(new ValidationError('Переданы некорректные данные'));
+      next(new ValidationError('Переданы некорректные данные'));
     }
     return next(err);
   }

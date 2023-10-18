@@ -72,9 +72,9 @@ const deleteCard = (req, res, next) => {
     .orFail()
     .then((card) => {
       const { ownerId } = card.owner.toString();
-      // console.log('ownerId', ownerId);
-      // console.log('userId', _id);
-      // console.log(ownerId.valueOf() === _id);
+      console.log('ownerId', ownerId);
+      console.log('userId', userId);
+      console.log(ownerId.valueOf() === userId);
       if (ownerId !== userId) {
         throw next(ForbiddenError('Невозможно удалить карточку, созданную другим пользователем'));
       }
