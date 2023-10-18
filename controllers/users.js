@@ -13,18 +13,18 @@ const AuthorizationError = require('../errors/AuthorizationError');
 const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
-    .then(({ _id: userId }) => {
-      if (userId) {
+    .then((user) => {
+      if (user) {
         const token = jwt.sign(
-          { userId },
+          { _id: user._id },
           NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
           { expiresIn: '7d' },
         );
-        /* res.cookie('jwt', token, {
+        res.cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: true,
-        }); */
+        });
         return res.send({ jwt: token });
       }
       return new AuthorizationError('Неправильные почта или пароль');
