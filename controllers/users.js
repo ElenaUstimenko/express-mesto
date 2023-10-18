@@ -24,10 +24,11 @@ const login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.send({ jwt: token });
+      // res.send({ jwt: token });
       if (!token) {
         throw new AuthorizationError('Неправильные почта или пароль');
       }
+      res.send({ jwt: token });
     })
     /* .catch((err) => {
       if (err.name === 'AuthorizationError') {
