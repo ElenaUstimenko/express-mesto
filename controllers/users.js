@@ -27,7 +27,7 @@ const login = (req, res, next) => {
         });
         return res.send({ jwt: token });
       }
-      throw new AuthorizationError('Неправильные почта или пароль');
+      return new AuthorizationError('Неправильные почта или пароль');
     })
     .catch(next);
 };
