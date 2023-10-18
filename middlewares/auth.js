@@ -31,7 +31,7 @@ const AuthorizationError = require('../errors/AuthorizationError');
 }; */
 
 // second version:
-function auth(req, res, next) {
+/* function auth(req, res, next) {
   const { authorization } = req.headers;
   const { cookies } = req.cookies.jwt;
 
@@ -49,6 +49,27 @@ function auth(req, res, next) {
   }
   req.user = payload; // записываем  payload в объект запроса
   return next(); // пропускаем запрос дальше
+} */
+
+// third version:
+function auth(req, res, next) {
+  const { cookies } = req.cookies.jwt;
+
+  if (!cookies || !cookies.jwt) {
+    return next(new AuthorizationError('Необходима авторизация'));
+  }
+
+  const token = cookies.jwt;
+  let payload;
+
+  try {
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key');
+  } catch (err) {
+    return next(new AuthorizationError('С токеном что-то не так'));
+  }
+
+  req.user = payload;
+  return next();
 }
 
 module.exports = { auth };
