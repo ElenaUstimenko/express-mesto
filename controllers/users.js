@@ -29,7 +29,7 @@ const login = (req, res, next) => {
     // .catch(next);
     .catch((err) => {
       if (err.name === 'AuthorizationError') {
-        return next(new AuthorizationError('Неправильные почта или пароль'));
+        next(new AuthorizationError('Неправильные почта или пароль'));
       }
       return next(err);
     });
@@ -81,9 +81,9 @@ const getUsers = async (req, res, next) => {
     if (err.name === 'AuthorizationError') {
       return next(new AuthorizationError('Необходима авторизация'));
     }
-    /* if (err.name === 'ValidationError' || err.name === 'CastError') {
-      next(new ValidationError('Переданы некорректные данные'));
-    } */
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
+      return next(new ValidationError('Переданы некорректные данные'));
+    }
     return next(err);
   }
 };
