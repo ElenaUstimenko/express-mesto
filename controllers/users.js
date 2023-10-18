@@ -29,13 +29,13 @@ const login = (req, res, next) => {
         throw new AuthorizationError('Неправильные почта или пароль');
       }
     })
-    .catch((err) => {
+    /* .catch((err) => {
       if (err.name === 'AuthorizationError') {
         next(new AuthorizationError('Неправильные почта или пароль'));
       }
       return next(err);
-    });
-  // .catch(next);
+    });*/
+    .catch(next);
 };
 
 const SOLT_ROUNDS = 10;
