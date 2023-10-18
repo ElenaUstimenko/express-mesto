@@ -20,11 +20,11 @@ const login = (req, res, next) => {
           NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
           { expiresIn: '7d' },
         );
-        res.cookie('jwt', token, {
+        /* res.cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: true,
-        });
+        }); */
         return res.send({ jwt: token });
       }
       return new AuthorizationError('Неправильные почта или пароль');
