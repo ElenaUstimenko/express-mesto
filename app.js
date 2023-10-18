@@ -7,8 +7,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate'); // отправить клиенту ошибку
 const limiter = require('./middlewares/rateLimiter');
-const { errorHandler } = require('./middlewares/errorHandler');
 const { router } = require('./routes/index');
+const { errorHandler } = require('./middlewares/errorHandler');
 
 // env хранит все переменные окружения
 // const { PORT, MONGO_URL } = process.env;
