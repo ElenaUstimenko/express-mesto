@@ -4,6 +4,27 @@ const { JWT_SECRET, NODE_ENV } = process.env;
 const AuthorizationError = require('../errors/AuthorizationError');
 
 // first version:
+function auth(req, res, next) {
+  const { authorization } = req.headers;
+  const { cookies } = req.cookies.jwt;
+
+  if (!(authorization && authorization.startsWith('Bearer ')) && !(cookies && cookies.jwt)) {
+    return next(new AuthorizationError('Необходима авторизация'));
+  }
+
+  const token = authorization ? authorization.replace('Bearer ', '') : cookies.jwt;
+  let payload;
+
+  try {
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key');
+  } catch (err) {
+    return next(new AuthorizationError('С токеном что-то не так'));
+  }
+  req.user = payload; // записываем  payload в объект запроса
+  return next(); // пропускаем запрос дальше
+}
+
+// second version:
 /* module.exports = (req, res, next) => {
   let payload;
   try {
@@ -30,29 +51,8 @@ const AuthorizationError = require('../errors/AuthorizationError');
   return next(); // пропускаем запрос дальше
 }; */
 
-// second version:
-/* function auth(req, res, next) {
-  const { authorization } = req.headers;
-  const { cookies } = req.cookies.jwt;
-
-  if (!(authorization && authorization.startsWith('Bearer ')) && !(cookies && cookies.jwt)) {
-    return next(new AuthorizationError('Необходима авторизация'));
-  }
-
-  const token = authorization ? authorization.replace('Bearer ', '') : cookies.jwt;
-  let payload;
-
-  try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key');
-  } catch (err) {
-    return next(new AuthorizationError('С токеном что-то не так'));
-  }
-  req.user = payload; // записываем  payload в объект запроса
-  return next(); // пропускаем запрос дальше
-} */
-
 // third version:
-function auth(req, res, next) {
+/* function auth(req, res, next) {
   const { cookies } = req.cookies.jwt;
 
   if (!cookies || !cookies.jwt) {
@@ -70,6 +70,6 @@ function auth(req, res, next) {
 
   req.user = payload;
   return next();
-}
+} */
 
 module.exports = { auth };

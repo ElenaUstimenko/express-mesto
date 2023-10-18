@@ -33,8 +33,9 @@ const login = (req, res, next) => {
       if (err.name === 'AuthorizationError') {
         next(new AuthorizationError('Неправильные почта или пароль'));
       }
-    })
-    .catch(next);
+      return next(err);
+    });
+  // .catch(next);
 };
 
 const SOLT_ROUNDS = 10;

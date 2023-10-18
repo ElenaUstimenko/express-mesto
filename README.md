@@ -1,9 +1,7 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 
 
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
-
-
+---
 # **Espress-Mesto** 
 
 **Целью проекта было создание cервера.** 
@@ -22,7 +20,7 @@ Mesto: интерактивная страница, куда можно доба
 * Переключение лайка карточки
 * Удаление карточки
 
-
+---
 **Директории**
 
 `/routes` — папка с файлами роутера
@@ -31,24 +29,25 @@ Mesto: интерактивная страница, куда можно доба
 
 `/models` — папка с файлами описания схем пользователя и карточки
 
-
+---
 **Запуск проекта**
 
 `npm run start` — запускает сервер
 
 `npm run dev` — запускает сервер с hot-reload
 
-
+---
 **Стек технологий**
+
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
-
+---
 **Ссылка**
 
 https://github.com/ElenaUstimenko/express-mesto.git
 
 
-
+---
 # **Espress-Mesto**   
 
 **The goal of this project was to create a server.**  
@@ -66,7 +65,7 @@ Functionality:
 * Switching cards's likes
 * Card removing
 
-
+---
 **Directories**
 
 `/routes` - folder with router files
@@ -75,21 +74,22 @@ Functionality:
 
 `/models` - folder with files describing user schemes and cards
 
-
+---
 **Launch of the project**
 
 `npm run start` - starts the server
 
 `npm run dev` - starts the server with a hot-reload
 
-
+---
 **Technology stack**
+
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
-
+---
 **Link**
 
 https://github.com/ElenaUstimenko/express-mesto.git
