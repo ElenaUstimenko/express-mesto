@@ -14,7 +14,6 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      // if (user) {
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
@@ -26,8 +25,6 @@ const login = (req, res, next) => {
         sameSite: true,
       });
       return res.send({ jwt: token });
-      // }
-      // return next(new AuthorizationError('Неправильные почта или пароль'));
     })
     // .catch(next);
     .catch((err) => {
@@ -82,11 +79,11 @@ const getUsers = async (req, res, next) => {
     return res.send(users);// передать данные пользователей
   } catch (err) {
     if (err.name === 'AuthorizationError') {
-      next(new AuthorizationError('Необходима авторизация'));
+      return next(new AuthorizationError('Необходима авторизация'));
     }
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    /* if (err.name === 'ValidationError' || err.name === 'CastError') {
       next(new ValidationError('Переданы некорректные данные'));
-    }
+    } */
     return next(err);
   }
 };
