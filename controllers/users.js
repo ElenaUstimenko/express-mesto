@@ -14,22 +14,28 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      if (user) {
-        const token = jwt.sign(
-          { _id: user._id },
-          NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
-          { expiresIn: '7d' },
-        );
-        res.cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          sameSite: true,
-        });
-        return res.send({ jwt: token });
-      }
-      return next(new AuthorizationError('Неправильные почта или пароль'));
+      // if (user) {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+        { expiresIn: '7d' },
+      );
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+        sameSite: true,
+      });
+      return res.send({ jwt: token });
+      // }
+      // return next(new AuthorizationError('Неправильные почта или пароль'));
     })
-    .catch(next);
+    // .catch(next);
+    .catch((err) => {
+      if (err.name === 'AuthorizationError') {
+        return next(new AuthorizationError('Неправильные почта или пароль'));
+      }
+      return next(err);
+    });
 };
 
 const SOLT_ROUNDS = 10;
