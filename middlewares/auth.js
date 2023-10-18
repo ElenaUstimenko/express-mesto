@@ -6,13 +6,13 @@ const AuthorizationError = require('../errors/AuthorizationError');
 // first version:
 function auth(req, res, next) {
   const { authorization } = req.headers;
-  const { cookies } = req.cookies.jwt;
+  const jwtCookie = req.cookies ? req.cookies.jwt : null;
 
-  if (!(authorization && authorization.startsWith('Bearer ')) && !(cookies && cookies.jwt)) {
+  if (!(authorization && authorization.startsWith('Bearer ')) && !jwtCookie) {
     return next(new AuthorizationError('Необходима авторизация'));
   }
 
-  const token = authorization ? authorization.replace('Bearer ', '') : cookies.jwt;
+  const token = authorization ? authorization.replace('Bearer ', '') : jwtCookie;
   let payload;
 
   try {

@@ -27,17 +27,13 @@ const login = (req, res, next) => {
       if (!token) {
         throw new AuthorizationError('Неправильные почта или пароль');
       }
-
       return res.send({ jwt: token });
     })
-    // .catch(next);
     .catch((err) => {
-      console.log(err);
       if (err.name === 'AuthorizationError') {
         return next(new AuthorizationError('Неправильные почта или пароль'));
       }
       return next(err);
-      console.log(err);
     });
 };
 
@@ -82,7 +78,7 @@ const getUsers = async (req, res, next) => {
     if (!users) {
       throw new NotFoundError('Пользователи не найдены');
     }
-    return res.send(users);// передать данные пользователей
+    return res.send(users);
   } catch (err) {
     if (err.name === 'AuthorizationError') {
       return next(new AuthorizationError('Необходима авторизация'));
