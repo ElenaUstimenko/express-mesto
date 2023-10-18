@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
 const ForbiddenError = require('../errors/ForbiddenError');
 const NotFoundError = require('../errors/NotFoundError');
@@ -36,56 +37,28 @@ const createCard = async (req, res, next) => {
 };
 
 // DELETE /cards/:cardId — удаляет карточку по идентификатору
-/* const deleteCard = async (req, res, next) => {
-  try {
-    const { cardId } = req.params;
-    const card = await Card.findById(cardId).populate('owner');
-
-    if (!card) {
-      throw new NotFoundError('Карточка с указанным _id не найдена');
-    }
-    const ownerId = card.owner._id;
-    const userId = req.user._id;
-    console.log('ownerId', ownerId);
-    console.log('userId', userId);
-    console.log(ownerId.valueOf() === userId);
-
-    if (ownerId !== userId) {
-      throw next(ForbiddenError('Невозможно удалить карточку, созданную другим пользователем'));
-    }
-    // if (ownerId.valueOf() === userId) {
-    // return res.send(card);
-    await card.remove();
-    // }
-    return res.send(card);
-  } catch (error) {
-    // if (error.name === 'ValidationError' || error.name === 'CastError') {
-    // return next(new ValidationError('Переданы некорректные данные'));
-    // }
-    return next(error);
-  }
-}; */
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   return Card.findById(cardId)
     .orFail()
     .then((card) => {
-      const { ownerId } = card.owner.toString();
+      const ownerId = card.owner.toString();
+      console.log('cardId', cardId);
       console.log('ownerId', ownerId);
       console.log('userId', userId);
       console.log(ownerId.valueOf() === userId);
       if (ownerId !== userId) {
-        throw next(ForbiddenError('Невозможно удалить карточку, созданную другим пользователем'));
+        throw new ForbiddenError('Невозможно удалить карточку, созданную другим пользователем');
       }
       return card.deleteOne();
     })
-    .then((card) => res.status(200).send(card))
+    .then((cardData) => res.status(200).send(cardData))
     .catch((err) => {
-      if (err.name === 'NotFoundError') {
-        return next(new NotFoundError('Передан несуществующий _id карточки'));
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
+        return next(new NotFoundError(`Передан несуществующий _id: ${cardId}`));
       }
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         return next(new ValidationError('Переданы некорректные данные'));
       }
       return next(err);
