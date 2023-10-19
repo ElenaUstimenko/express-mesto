@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -19,14 +20,6 @@ const login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: true,
-      });
-      if (!token) {
-        throw new AuthorizationError('Неправильные почта или пароль');
-      }
       return res.send({ jwt: token });
     })
     .catch((err) => {
@@ -63,7 +56,7 @@ const createUsers = async (req, res, next) => {
     if (err.code === 11000) {
       return next(new ReRegistrationError('Данный email уже зарегистрирован'));
     }
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err instanceof mongoose.Error.ValidationError) {
       return next(new ValidationError('Переданы некорректные данные'));
     }
     return next(err);
@@ -75,17 +68,8 @@ const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
 
-    if (!users) {
-      throw new NotFoundError('Пользователи не найдены');
-    }
     return res.send(users);
   } catch (err) {
-    if (err.name === 'AuthorizationError') {
-      return next(new AuthorizationError('Необходима авторизация'));
-    }
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return next(new ValidationError('Переданы некорректные данные'));
-    }
     return next(err);
   }
 };
@@ -100,9 +84,6 @@ const getUserMe = async (req, res, next) => {
     }
     return res.send(user);
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return next(new ValidationError('Переданы некорректные данные'));
-    }
     return next(err);
   }
 };
@@ -118,7 +99,7 @@ const getUserId = async (req, res, next) => {
     }
     return res.send(user);
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err instanceof mongoose.Error.CastError) {
       return next(new ValidationError('Переданы некорректные данные'));
     }
     return next(err);
@@ -143,7 +124,7 @@ const updateUser = async (req, res, next) => {
     }
     return res.send(user);
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err instanceof mongoose.Error.ValidationError) {
       return next(new ValidationError('Переданы некорректные данные'));
     }
     return next(err);
@@ -168,7 +149,7 @@ const updateUserAvatar = async (req, res, next) => {
     }
     return res.send(user);
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err instanceof mongoose.Error.ValidationError) {
       return next(new ValidationError('Переданы некорректные данные'));
     }
     return next(err);

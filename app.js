@@ -11,7 +11,6 @@ const { errorHandler } = require('./middlewares/errorHandler');
 const { router } = require('./routes/index');
 
 // env хранит все переменные окружения
-// const { PORT, MONGO_URL } = process.env;
 const {
   PORT = 3000,
   MONGO_URL = 'mongodb://127.0.0.1:27017/mestodb',
@@ -28,6 +27,7 @@ mongoose.connect(MONGO_URL); // подключаемся к серверу Mongo
 
 // после инициализации приложения, но до задействования роутов
 app.use(json());
+// app.use(bodyParser.json()); // для собирания JSON-формата, объединения пакетов
 app.use(bodyParser.json()); // для собирания JSON-формата, объединения пакетов
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 

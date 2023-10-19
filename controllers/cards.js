@@ -9,14 +9,8 @@ const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
 
-    if (!cards) {
-      throw new NotFoundError('Карточки не найдены');
-    }
     return res.send(cards);
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return next(new ValidationError('Переданы некорректные данные'));
-    }
     return next(err);
   }
 };
@@ -29,7 +23,7 @@ const createCard = async (req, res, next) => {
     const newCard = await Card.create({ name, link, owner: ownerId });
     return res.status(201).send(await newCard.save());
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err instanceof mongoose.Error.ValidationError) {
       return next(ValidationError('Переданы некорректные данные'));
     }
     return next(err);
@@ -81,7 +75,7 @@ function likeCard(req, res, next) {
       throw new NotFoundError('Передан несуществующий _id карточки');
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         return next(new ValidationError('Переданы некорректные данные'));
       }
       return next(err);
@@ -103,7 +97,7 @@ const dislikeCard = async (req, res, next) => {
     }
     return res.send(card);
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err instanceof mongoose.Error.CastError) {
       return next(new ValidationError('Переданы некорректные данные'));
     }
     return next(err);

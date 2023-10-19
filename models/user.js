@@ -38,11 +38,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
-
-    validate: {
-      validator: ({ length }) => length >= 6,
-      message: 'Пароль должен состоять минимум из 6 символов',
-    },
   },
 }, { toObject: { useProjection: true }, toJSON: { useProjection: true } });
 // чтобы пароль не возвращался ^
@@ -67,4 +62,4 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('user', userSchema);
