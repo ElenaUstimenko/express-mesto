@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET, NODE_ENV } = process.env;
 const AuthorizationError = require('../errors/AuthorizationError');
 
-function auth(req, res, next) {
+/* function auth(req, res, next) {
   let payload;
   try {
     const { authorization } = req.headers;
@@ -19,6 +19,25 @@ function auth(req, res, next) {
   } catch (error) {
     next(new AuthorizationError('С токеном что-то не так'));
   }
+} */
+
+function auth(req, res, next) {
+  const jwtCookie = req.cookies && req.cookies.jwt;
+
+  if (!jwtCookie) {
+    return next(new AuthorizationError('Необходима авторизация'));
+  }
+
+  const token = jwtCookie;
+  let payload;
+
+  try {
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key');
+  } catch (err) {
+    return next(new AuthorizationError('С токеном что-то не так'));
+  }
+  req.user = payload; // записываем payload в объект запроса
+  return next(); // пропускаем запрос дальше
 }
 
 /* function auth(req, res, next) {
