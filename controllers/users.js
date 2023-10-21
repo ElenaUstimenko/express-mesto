@@ -24,9 +24,8 @@ const login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
-      });
-
-      return res.send({ jwt: token });
+      })
+        .send(user);
     })
     .catch((err) => {
       if (err.name === 'AuthorizationError') {
@@ -50,14 +49,17 @@ const createUsers = async (req, res, next) => {
     } = req.body;
     const hash = await bcrypt.hash(password, SOLT_ROUNDS);
 
-    const newUser = await new User({
-      email,
-      password: hash,
-      name,
-      about,
-      avatar,
+    const user = await User.create({
+      email, password: hash, name, about, avatar,
     });
-    return res.status(201).send(await newUser.save());
+    return res.status(200).send({
+      user: {
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+      },
+    });
   } catch (err) {
     if (err.code === 11000) {
       return next(new ReRegistrationError('Данный email уже зарегистрирован'));
